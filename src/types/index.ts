@@ -14,3 +14,5 @@ export type Cita = {
   hora: string;
   estado: EstadoCita;
 };
+
+export type NuevaCita = Omit<Cita, 'id' | 'estado'>;

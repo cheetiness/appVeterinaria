@@ -6,6 +6,11 @@ export class AppError extends Error {
   }
 }
 
+function esErrorDeJson(error: unknown): boolean {
+  return typeof error === "object" && error !== null &&
+    (error as { type?: string }).type === "entity.parse.failed";
+}
+
 export const rutaNoEncontrada: RequestHandler = (req, res) => {
   res.status(404).json({
     mensaje: `No existe la ruta ${req.method} ${req.path}`,
@@ -13,13 +18,27 @@ export const rutaNoEncontrada: RequestHandler = (req, res) => {
 };
 
 export const manejarErrores: ErrorRequestHandler = (
-  error, _req, res, _next,
+  error,
+  _req,
+  res,
+
+  _next,
 ) => {
   console.error(error);
-  const status = error instanceof AppError ? error.status : 500;
-  res.status(status).json({
-    mensaje: error instanceof Error
-      ? error.message
-      : "Error interno del servidor",
+
+  if (error instanceof AppError) {
+    res.status(error.status).json({ mensaje: error.message });
+    return;
+  }
+
+  if (esErrorDeJson(error)) {
+    res.status(400).json({
+      mensaje: "El cuerpo de la solicitud no es un JSON válido.",
+    });
+    return;
+  }
+
+  res.status(500).json({
+    mensaje: "Error interno del servidor. Intenta de nuevo más tarde.",
   });
 };
