@@ -55,7 +55,7 @@ export async function crearCita(datos: NuevaCita): Promise<Cita> {
   );
 
   const cita = await buscarCitaPorId(resultado.insertId);
-  if (!cita) throw new Error("La cita se guardÃ³, pero no pudo recuperarse.");
+  if (!cita) throw new Error("La cita se guardó, pero no pudo recuperarse.");
   return cita;
 }
 

@@ -2,6 +2,9 @@ create database veterinaria_db character set utf8mb4 collate utf8mb4_unicode_ci;
 
 USE veterinaria_db;
 
+TRUNCATE TABLE citas; 
+//borra todas las citas
+
 create table citas(
     id int AUTO_INCREMENT PRIMARY KEY,
     mascota varchar(80) NOT NULL,
